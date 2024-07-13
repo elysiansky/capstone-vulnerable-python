@@ -42,7 +42,7 @@ jobs:
 
 
       - name: Send failure notification
-        if: ${{ input.status_on_success_push == 'failure' }}
+        if: ${{ inputs.status_on_success_push == 'failure' }}
         env: 
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }} 
         uses: Ilshidur/action-discord@master
