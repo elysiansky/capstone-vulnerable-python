@@ -1,0 +1,35 @@
+name: build-vulnerable-flask-image 
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Get git commit SHA for tag
+      id: git_sha
+      run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_ENV  
+
+    - name: Build the Docker image
+      run: docker build . --file docker/Dockerfile --tag vulnerable-flask-app:${{ env.sha }}
+
+    outputs:
+      git_sha: ${{ env.sha }}  
+
+  publish:
+    needs: build
+    uses: ./.github/workflows/publish.yaml
+    secrets: inherit
+    with:
+      git_sha:${{ needs.build.outputs.git_sha }}    
+
