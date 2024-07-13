@@ -7,9 +7,9 @@ on:
         required: true
         type: string
 
-workflow_run:
-workflows: ["build-vulnerable-flask-image"]  
-types: [completed]
+  workflow_run:
+    workflows: ["build-vulnerable-flask-image"]  
+    types: [completed]
 
 
 jobs:
