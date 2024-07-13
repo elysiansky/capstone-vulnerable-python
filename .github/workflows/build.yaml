@@ -28,7 +28,7 @@ jobs:
 
   publish:
     needs: build
-    uses: ./.github/workflows/publish.yaml
+    uses: ./.github/workflows/publish_notify.yaml
     secrets: inherit
     with:
       git_sha:${{ needs.build.outputs.git_sha }}    
