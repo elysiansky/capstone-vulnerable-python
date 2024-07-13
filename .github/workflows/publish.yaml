@@ -39,7 +39,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           platforms: ${{ inputs.platforms }}
-          tags:  ${{ secrets.DOCKER_USERNAME }}/vulnerable-flask-app:${{ inputs.git_sha }}-${{ inputs.platforms }}
+          tags:  ${{ secrets.DOCKER_USERNAME }}/capstone-vulnerable-python:${{ inputs.git_sha }}-${{ inputs.platforms }}
           push: true
 
     outputs:

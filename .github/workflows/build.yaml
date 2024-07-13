@@ -48,7 +48,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           output: type=docker
           push: false
-          tags: vulnerable-flask-app:${{ env.sha }}-${{ matrix.platform }}
+          tags: capstone-vulnerable-python:${{ env.sha }}-${{ matrix.platform }}
 
   
   publish: # Reference publish.yaml workflow
