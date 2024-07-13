@@ -1,4 +1,4 @@
-name: publish-vulnerable-flask-image
+name: publish-notify-vulnerable-flask-image
 
 on:
   workflow_call:
@@ -7,9 +7,9 @@ on:
         required: true
         type: string
 
-  workflow_run:
-  workflows: ["build-vulnerable-flask-image"]  
-  types: [completed]
+workflow_run:
+workflows: ["build-vulnerable-flask-image"]  
+types: [completed]
 
 
 jobs:
