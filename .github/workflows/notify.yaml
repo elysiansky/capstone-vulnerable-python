@@ -1,0 +1,50 @@
+name: notify-pipeline-status
+
+on: 
+  workflow_call:
+    inputs:
+      pipeline:
+        required: true
+        type: string
+
+      status_on_success_push:
+        required: true
+        type: string
+
+      error_message_push:
+        required: true
+        type: string
+
+      error_output_push:
+        required: true
+        type: string    
+
+  
+  workflow_run: 
+    workflows: ["publish-vulnerable-flask-image"]
+    types: [completed]  
+
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Send success notification
+        env: 
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }} 
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "The project ${{ inputs.pipeline }} is successfully built and published !\n\nImage Repository: ${{ vars.PROJECT_IMAGE_REPOSITORY_URL }}\nProject Repository: ${{ vars.PROJECT_REPOSITORY_URL }}\n"
+
+
+      - name: Send failure notification
+        if: ${{ input.status_on_success_push == 'failure' }}
+        env: 
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }} 
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "The project ${{ inputs.pipeline }} has failed to publish with the following error message:\nError Message: ${{ inputs.error_message_push }}\nError Output: ${{ inputs.error_output_push }}\n"    

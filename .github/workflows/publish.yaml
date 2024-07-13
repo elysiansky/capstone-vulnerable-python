@@ -1,4 +1,4 @@
-name: publish-notify-vulnerable-flask-image
+name: publish-vulnerable-flask-image
 
 on:
   workflow_call:
@@ -6,6 +6,7 @@ on:
       git_sha:
         required: true
         type: string
+   
 
   workflow_run:
     workflows: ["build-vulnerable-flask-image"]  
@@ -32,6 +33,17 @@ jobs:
 
     outputs:
       error_message_push: ${{ steps.capture_error.outputs.ERROR_MESSAGE }}
-      error_output_push: ${{ steps.capture_error.outputs.ERROR_OUTPUT }}           
+      error_output_push: ${{ steps.capture_error.outputs.ERROR_OUTPUT }} 
+
+
+  notify-discord:
+    needs: on-success-push
+    uses: ./.github/workflows/notify.yaml
+    secrets: inherit
+    with:
+      pipeline: "Capstone Vulnerable Flask App"
+      status_on_success_push: ${{ needs.on-success-push.result }}
+      error_message_push: ${{ needs.on-success-push.outputs.error_message_push }}
+      error_output_push: ${{ needs.on-success-push.outputs.error_output_push }}
 
         
