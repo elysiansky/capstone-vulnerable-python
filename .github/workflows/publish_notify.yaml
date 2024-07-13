@@ -27,7 +27,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push the docker image
-        run: docker push pgreece1122/vulnerable-flask-app:${{ git_sha }} 
+        run: docker push pgreece1122/vulnerable-flask-app:${{ inputs.git_sha }} 
 
 
     outputs:
