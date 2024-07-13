@@ -1,50 +1,67 @@
 name: notify-pipeline-status
 
-on: 
-  workflow_call:
-    inputs:
-      pipeline:
-        required: true
-        type: string
+on:
+    workflow_call:
+      inputs:
+        pipeline:
+            required: true
+            type: string
+        status_on_success_push: 
+            required: true
+            type: string
+        # status_on_success_update_chart: 
+        #     required: true
+        #     type: string
+        error_message_push: 
+            required: true
+            type: string
+        error_output_push: 
+            required: true
+            type: string
+        # error_message_update_chart: 
+        #     required: true
+        #     type: string
+        # error_output_update_chart: 
+        #     required: true
+        #     type: string
 
-      status_on_success_push:
-        required: true
-        type: string
-
-      error_message_push:
-        required: true
-        type: string
-
-      error_output_push:
-        required: true
-        type: string    
-
-  
-  workflow_run: 
-    workflows: ["publish-vulnerable-flask-image"]
-    types: [completed]  
-
+    workflow_run:
+      workflows: ["publish-docker-images"]
+      types: [completed] #requested
 
 jobs:
   notify:
     runs-on: ubuntu-latest
+    environment: development
 
-    steps: 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Send success notification
-        env: 
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }} 
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+    
+    #   - name: Print status messages
+    #     run: |
+    #       echo "status_on_success_push: ${{ inputs.status_on_success_push }}"
+    #       echo "status_on_success_update_chart: ${{ inputs.status_on_success_update_chart }}"
+    #       echo "pipeline: ${{ inputs.pipeline }}"
+    #       echo "error_message_push: ${{ inputs.error_message_push }}"
+    #       echo "error_output_push: ${{ inputs.error_output_push }}"
+    #       echo "error_message_update_chart: ${{ inputs.error_message_update_chart }}"
+    #       echo "error_output_update_chart: ${{ inputs.error_output_update_chart }}"
+    #       echo "error_output_update_chart: ${{ vars.PROJECT_IMAGE_REPOSITORY_URL }}"
+    #       echo "error_output_update_chart: ${{ vars.PROJECT_REPOSITORY_URL }}"
+    #       echo "error_output_update_chart: ${{ vars.PROJECT_CHART_URL }}"
+      
+      - name: Send Discord notification on success
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "The project ${{ inputs.pipeline }} is successfully built and published !\n\nImage Repository: ${{ vars.PROJECT_IMAGE_REPOSITORY_URL }}\nProject Repository: ${{ vars.PROJECT_REPOSITORY_URL }}\n"
+          args: "**[ STATUS MESSAGE ] The project ${{ inputs.pipeline }} successfully built and published!** \n\n Project Image Repository URL: ${{ vars.PROJECT_IMAGE_REPOSITORY_URL }} \n Project Repository URL: ${{ vars.PROJECT_REPOSITORY_URL }} \n Project Chart URL: ${{ vars.PROJECT_CHART_URL }}"
 
-
-      - name: Send failure notification
-        if: ${{ inputs.status_on_success_push == 'failure' }}
-        env: 
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }} 
+      - name: Send Discord notification on failure
+        if: ${{ inputs.status_on_success_push == 'failure' || inputs.status_on_success_update_chart == 'failure' }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "The project ${{ inputs.pipeline }} has failed to publish with the following error message:\nError Message: ${{ inputs.error_message_push }}\nError Output: ${{ inputs.error_output_push }}\n"    
+          args: "The project ${{ inputs.pipeline }} failed to build and publish: ${{ inputs.error_message_push }} ${{ inputs.error_output_push }} ${{ inputs.error_message_update_chart }} ${{ inputs.error_output_update_chart }}"
