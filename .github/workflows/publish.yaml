@@ -46,45 +46,45 @@ jobs:
       error_message_push: ${{ steps.capture_error.outputs.ERROR_MESSAGE }}
       error_output_push: ${{ steps.capture_error.outputs.ERROR_OUTPUT }}
 
-  # on-success-update-chart:
-  #   runs-on: ubuntu-latest
-  #   environment: development
-  #   needs: on-success-push
-  #   steps:
-  #     # - name: Debug Outputs
-  #     #   run: |
-  #     #     echo "Platforms: ${{ inputs.platforms }}"
-  #     #     echo "Git SHA: ${{ inputs.git_sha }}"      
+  on-success-update-chart:
+    runs-on: ubuntu-latest
+    environment: development
+    needs: on-success-push
+    steps:
+      # - name: Debug Outputs
+      #   run: |
+      #     echo "Platforms: ${{ inputs.platforms }}"
+      #     echo "Git SHA: ${{ inputs.git_sha }}"      
 
-  #     - name: Checkout Helm Chart Repository
-  #       uses: actions/checkout@v2
-  #       with:
-  #         repository: elysiansky/capstone-chart-vulnerable-php83
-  #         ref: main # Or use the branch/tag you want to update
-  #         token: ${{ secrets.HELM_CHART_PERSONAL_ACCESS_TOKEN }}      
+      - name: Checkout Helm Chart Repository
+        uses: actions/checkout@v2
+        with:
+          repository: elysiansky/capstone-chart-vulnerable-python
+          ref: main # Or use the branch/tag you want to update
+          token: ${{ secrets.HELM_CHART_PERSONAL_ACCESS_TOKEN }}      
       
-  #     # Update the Helm chart's values.yaml tag: VALUE with the latest Git SHA VALUE
-  #     # Combined pipeline: This approach uses a single pipeline with tr and sed to streamline the process.
-  #     # tr for cleanup: The tr command removes quotes and spaces from the values.yaml content before piping it to sed.
-  #     # Single sed command: The sed command searches for lines starting with "tag: " (including the space) and replaces everything after the colon with the provided Git SHA value.
-  #     # In-place modification: The -i flag ensures direct modification of the values.yaml file.
-  #     - name: Update Helm Chart Values Image Tag
-  #       run: |
-  #         tr -d ' " ' < values.yaml | sed -i "s/tag:.*/tag: ${{ inputs.git_sha }}-${{ inputs.platforms }}/g" ${{ github.workspace }}/values.yaml
-  #       working-directory: ${{ github.workspace }}
+      # Update the Helm chart's values.yaml tag: VALUE with the latest Git SHA VALUE
+      # Combined pipeline: This approach uses a single pipeline with tr and sed to streamline the process.
+      # tr for cleanup: The tr command removes quotes and spaces from the values.yaml content before piping it to sed.
+      # Single sed command: The sed command searches for lines starting with "tag: " (including the space) and replaces everything after the colon with the provided Git SHA value.
+      # In-place modification: The -i flag ensures direct modification of the values.yaml file.
+      - name: Update Helm Chart Values Image Tag
+        run: |
+          tr -d ' " ' < values.yaml | sed -i "s/tag:.*/tag: ${{ inputs.git_sha }}-${{ inputs.platforms }}/g" ${{ github.workspace }}/values.yaml
+        working-directory: ${{ github.workspace }}
 
 
-  #     # Commit and push the changes to the Helm chart repository
-  #     - name: Commit and Push Changes
-  #       run: |
-  #         git config --global user.email "action@github.com"
-  #         git config --global user.name "GitHub Action"
-  #         git add .
-  #         git commit -m "Update image tag with latest Git SHA"
-  #         git push
-  #   outputs:
-  #     error_message_update_chart: ${{ steps.capture_error.outputs.ERROR_MESSAGE }}
-  #     error_output_update_chart: ${{ steps.capture_error.outputs.ERROR_OUTPUT }}
+      # Commit and push the changes to the Helm chart repository
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add .
+          git commit -m "Update image tag with latest Git SHA"
+          git push
+    outputs:
+      error_message_update_chart: ${{ steps.capture_error.outputs.ERROR_MESSAGE }}
+      error_output_update_chart: ${{ steps.capture_error.outputs.ERROR_OUTPUT }}
 
   on-success-notify-discord: # Reference publish.yaml workflow
     needs: on-success-push # This job depends on the successful completion of "on-success-push"
@@ -93,8 +93,8 @@ jobs:
     with:
       pipeline: "Capstone Vulnerable Flask App"
       status_on_success_push: ${{ needs.on-success-push.result }}
-      # status_on_success_update_chart: ${{ needs.on-success-update-chart.result }}
+      status_on_success_update_chart: ${{ needs.on-success-update-chart.result }}
       error_message_push: ${{ needs.on-success-push.outputs.error_message_push }}
       error_output_push: ${{ needs.on-success-push.outputs.error_output_push }}
-      # error_message_update_chart: ${{ needs.on-success-update-chart.outputs.error_message_update_chart }}
-      # error_output_update_chart: ${{ needs.on-success-update-chart.outputs.error_output_update_chart }}
+      error_message_update_chart: ${{ needs.on-success-update-chart.outputs.error_message_update_chart }}
+      error_output_update_chart: ${{ needs.on-success-update-chart.outputs.error_output_update_chart }}

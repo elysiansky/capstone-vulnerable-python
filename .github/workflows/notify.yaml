@@ -9,21 +9,21 @@ on:
         status_on_success_push: 
             required: true
             type: string
-        # status_on_success_update_chart: 
-        #     required: true
-        #     type: string
+        status_on_success_update_chart: 
+            required: true
+            type: string
         error_message_push: 
             required: true
             type: string
         error_output_push: 
             required: true
             type: string
-        # error_message_update_chart: 
-        #     required: true
-        #     type: string
-        # error_output_update_chart: 
-        #     required: true
-        #     type: string
+        error_message_update_chart: 
+            required: true
+            type: string
+        error_output_update_chart: 
+            required: true
+            type: string
 
     workflow_run:
       workflows: ["publish-docker-images"]
@@ -38,18 +38,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
     
-    #   - name: Print status messages
-    #     run: |
-    #       echo "status_on_success_push: ${{ inputs.status_on_success_push }}"
-    #       echo "status_on_success_update_chart: ${{ inputs.status_on_success_update_chart }}"
-    #       echo "pipeline: ${{ inputs.pipeline }}"
-    #       echo "error_message_push: ${{ inputs.error_message_push }}"
-    #       echo "error_output_push: ${{ inputs.error_output_push }}"
-    #       echo "error_message_update_chart: ${{ inputs.error_message_update_chart }}"
-    #       echo "error_output_update_chart: ${{ inputs.error_output_update_chart }}"
-    #       echo "error_output_update_chart: ${{ vars.PROJECT_IMAGE_REPOSITORY_URL }}"
-    #       echo "error_output_update_chart: ${{ vars.PROJECT_REPOSITORY_URL }}"
-    #       echo "error_output_update_chart: ${{ vars.PROJECT_CHART_URL }}"
+      - name: Print status messages
+        run: |
+          echo "status_on_success_push: ${{ inputs.status_on_success_push }}"
+          echo "status_on_success_update_chart: ${{ inputs.status_on_success_update_chart }}"
+          echo "pipeline: ${{ inputs.pipeline }}"
+          echo "error_message_push: ${{ inputs.error_message_push }}"
+          echo "error_output_push: ${{ inputs.error_output_push }}"
+          echo "error_message_update_chart: ${{ inputs.error_message_update_chart }}"
+          echo "error_output_update_chart: ${{ inputs.error_output_update_chart }}"
+          echo "error_output_update_chart: ${{ vars.PROJECT_IMAGE_REPOSITORY_URL }}"
+          echo "error_output_update_chart: ${{ vars.PROJECT_REPOSITORY_URL }}"
+          echo "error_output_update_chart: ${{ vars.PROJECT_CHART_URL }}"
       
       - name: Send Discord notification on success
         env:
