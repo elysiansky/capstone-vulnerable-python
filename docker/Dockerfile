@@ -8,7 +8,14 @@ COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy the entrypoint script
+COPY /docker/entrypoint.sh /entrypoint.sh
+
+# Make the entrypoint script executable
+RUN chmod +x /entrypoint.sh
+
+# Expose the port
 EXPOSE 5000
 
-CMD ["python", "main.py"]
-
+# Set the entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
