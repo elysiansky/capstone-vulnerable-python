@@ -1,0 +1,35 @@
+# Ensure consistent line endings
+* text=auto eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+*.tgz binary
+*.bz2 binary
+*.xz binary
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.mp3 binary
+*.mp4 binary
+*.avi binary
+*.mov binary
+*.mkv binary
+*.ico binary
+*.psd binary
+*.ai binary
+*.sketch binary
+*.iso binary
+*.deb binary
+*.rpm binary
+*.pkg binary

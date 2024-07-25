@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 5000
 
-ENTRYPOINT ["python"]
+#ENTRYPOINT ["python"]
 
-CMD ["/app/Main.py"]
+CMD ["python", "/app/main.py"]
 

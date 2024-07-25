@@ -6,7 +6,9 @@ services:
     context: .
     dockerfile: ./docker/Dockerfile
   ports: 
-    - "3000:5000"
+    - "5000:5000"
+  volumes:
+    - .:/app
   environment:
-    - FLASK_APP=Main.py
+    - FLASK_APP=main.py
     - FLASK_RUN_HOST=0.0.0.0
