@@ -4,14 +4,14 @@ app = Flask(__name__)
 
 @app.after_request
 def set_x_frame_options(response):
-    ENABLE_X_FRAME_OPTIONS = False  # Set to False to disable
+    ENABLE_X_FRAME_OPTIONS = True  # Set to False to disable
     if ENABLE_X_FRAME_OPTIONS:
         response.headers['X-Frame-Options'] = 'DENY'  # or 'SAMEORIGIN' if you need to allow same origin framing
     return response
 
 @app.route('/')
 def home():
-    ENABLE_X_FRAME_OPTIONS = False
+    ENABLE_X_FRAME_OPTIONS = True
     if not ENABLE_X_FRAME_OPTIONS:
         import sys
         import platform
